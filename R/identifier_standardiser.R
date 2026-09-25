@@ -10,7 +10,7 @@
 #'
 #' @param identifier a database identifier to search for (e.g. "58-18-4", "LMFA01100004" or "HMDB0002100")
 #' @param type the database you are searching. Either "CAS", "LMP", or "HMDB"
-#' @param cache an RDS cache environment. Generated with init_PubChem_cache.
+#' @param cache an RDS cache environment. Generated with `init_PubChem_cache`.
 #'
 #' @returns a one-row dataframe with the PubChem compound ID, InChIKey, and PubChem title
 #'
@@ -21,7 +21,7 @@
 #'
 #' @examples
 #' # Set up a cache in the default location
-#' init_PubChem_cache()
+#' cache <- init_PubChem_cache()
 #'
 #' # Search for a CAS identifier
 #' cas_id <- identifier_standardiser(

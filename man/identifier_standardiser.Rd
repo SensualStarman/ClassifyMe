@@ -11,7 +11,7 @@ identifier_standardiser(identifier, type = c("CAS", "LMP", "HMDB"), cache)
 
 \item{type}{the database you are searching. Either "CAS", "LMP", or "HMDB"}
 
-\item{cache}{an RDS cache environment. Generated with init_PubChem_cache.}
+\item{cache}{an RDS cache environment. Generated with \code{init_PubChem_cache}.}
 }
 \value{
 a one-row dataframe with the PubChem compound ID, InChIKey, and PubChem title
@@ -26,7 +26,7 @@ A helper function, \code{add_zeroes_to_HMDB} is available to coerce HMDB IDs to 
 }
 \examples{
 # Set up a cache in the default location
-init_PubChem_cache()
+cache <- init_PubChem_cache()
 
 # Search for a CAS identifier
 cas_id <- identifier_standardiser(
