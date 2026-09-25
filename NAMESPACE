@@ -3,6 +3,8 @@
 export(add_zeroes_to_HMDB)
 export(identifier_standardiser)
 export(init_PubChem_cache)
+export(synonym_search)
 import(curl)
+import(httr2)
 import(storr)
 import(stringr)
