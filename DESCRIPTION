@@ -1,11 +1,10 @@
 Package: ClassifyMe
-Title: What the Package Does (One Line, Title Case)
+Title: Standardise and classify metabolites
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Ryan", "Lester", , "r.lester@griffith.edu.au", role = c("aut", "cre"))
+Description: Standardises metabolite names from CAS, LIPID-MAPS and HMDB identifiers, then classifies them for biological context. Designed to work with Agilent MassHunter Explorer outputs.
+License: GPL (>= 3)
 Config/roxygen2/version: 8.1.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
