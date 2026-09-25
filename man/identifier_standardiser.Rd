@@ -17,7 +17,7 @@ identifier_standardiser(identifier, type = c("CAS", "LMP", "HMDB"), cache)
 a one-row dataframe with the PubChem compound ID, InChIKey, and PubChem title
 }
 \description{
-Standardises identifiers (CAS, HMDB, LIPIDMAPS) to the PubChem CID, InChIKey
+Standardises identifiers (CAS, HMDB, LIPID-MAPS) to the PubChem CID, InChIKey
 and title. Returns a single row dataframe with these as outputs.
 Requires internet to query the PubChem database.
 
@@ -25,7 +25,7 @@ HMDB identifiers must be in the format "HMDBxxxxxxx" with seven digits.
 A helper function, \code{add_zeroes_to_HMDB} is available to coerce HMDB IDs to this format.
 }
 \examples{
-# Set up a cache
+# Set up a cache in the default location
 init_PubChem_cache()
 
 # Search for a CAS identifier

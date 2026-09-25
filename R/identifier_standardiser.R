@@ -1,6 +1,6 @@
 #' Standardise CAS, LIPID-MAPS and HMDB IDs
 #' @description
-#' Standardises identifiers (CAS, HMDB, LIPIDMAPS) to the PubChem CID, InChIKey
+#' Standardises identifiers (CAS, HMDB, LIPID-MAPS) to the PubChem CID, InChIKey
 #' and title. Returns a single row dataframe with these as outputs.
 #' Requires internet to query the PubChem database.
 #'
@@ -20,7 +20,7 @@
 #' @export
 #'
 #' @examples
-#' # Set up a cache
+#' # Set up a cache in the default location
 #' init_PubChem_cache()
 #'
 #' # Search for a CAS identifier
