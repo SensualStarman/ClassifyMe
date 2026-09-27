@@ -63,6 +63,11 @@ synonym_search <- function(
 
       query_df
 
+      # Save the result to the local cache
+      # The gsub call replaces any characters forbidden from Windows filenames
+      # with an underscore
+      cache$set(gsub('[<>:"/\\\\|?*]', "_", name), query)
+
     }, error = function(e) {
       # If there was an error, print the error message ...
       message("PubChem lookup failed: ", e$message)
@@ -77,10 +82,6 @@ synonym_search <- function(
 
       query_df
     })
-    # Save the result to the local cache
-    # The gsub call replaces any characters forbidden from Windows filenames
-    # with an underscore
-    cache$set(gsub('[<>:"/\\\\|?*]', "_", name), query)
 
     # Return query
     query

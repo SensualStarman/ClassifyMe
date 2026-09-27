@@ -102,6 +102,9 @@ identifier_standardiser <- function(
 
       query_df
 
+      # Save the result to the local cache
+      cache$set(identifier, query)
+
     }, error = function(e) {
 
       # If there was an error, print the error message ...
@@ -117,9 +120,6 @@ identifier_standardiser <- function(
 
       query_df
     })
-    # Save the result to the local cache
-    cache$set(identifier, query)
-
     # Return query
     query
   })
