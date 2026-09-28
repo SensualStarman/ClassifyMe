@@ -20,7 +20,6 @@
     print(paste0("Querying local cache and PubChem for ", label, "# ", query, " . . ."))
     result <- query_fun(query)
     result[[4]] <- query
-    print("Done!")
     # Put the results into a one-row dataframe for binding later
     data.frame(
       CID = result[[1]],
