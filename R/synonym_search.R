@@ -59,14 +59,15 @@ synonym_search <- function(
       # Save the data to a more usable format
       query_df <- as.data.frame(httr2::resp_body_json(resp)[[1]][[1]][[1]])
       query_df[["Name"]] <- name
-      query_df$PubChem_Message <- NA
-
-      query_df
+      query_df$PubChem_Message <- NA_character_
 
       # Save the result to the local cache
       # The gsub call replaces any characters forbidden from Windows filenames
       # with an underscore
-      cache$set(gsub('[<>:"/\\\\|?*]', "_", name), query)
+      cache$set(gsub('[<>:"/\\\\|?*]', "_", name), query_df)
+
+      # Return the one-line dataframe with results
+      query_df
 
     }, error = function(e) {
       # If there was an error, print the error message ...
@@ -76,7 +77,7 @@ synonym_search <- function(
       query_df <- data.frame(
         CID = c(NA_integer_),
         InChIKey = c(NA_character_),
-        DB_Name = c(NA_character_))
+        Title = c(NA_character_))
       query_df[["Name"]] <- name
       query_df$PubChem_Message <- e$message
 

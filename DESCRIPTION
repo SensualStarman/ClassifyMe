@@ -13,3 +13,6 @@ Imports:
     httr2,
     storr,
     stringr
+Depends: 
+    R (>= 3.5)
+LazyData: true
