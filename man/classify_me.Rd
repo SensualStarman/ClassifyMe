@@ -4,13 +4,13 @@
 \alias{classify_me}
 \title{Batch query the ClassyFire metabolite classification database}
 \usage{
-classify_me(inchikeys, database = NULL)
+classify_me(inchikeys, cache = NULL)
 }
 \arguments{
 \item{inchikeys}{chr vector containing only InChI keys and \code{NA}}
 
-\item{database}{the file path of an SQLite database. Default \code{NULL} places the
-database in the user's home folder.}
+\item{cache}{the file path of an SQLite cache. Default \code{NULL} places the
+cache in the user's home folder.}
 }
 \value{
 a dataframe with columns containing the InChI key and the first four
@@ -31,16 +31,16 @@ keys <- c(
   "KQTROLJZWNACJT-VKAVYKQESA-N",
   "GMYNCKRSFMEXPG-UHFFFAOYSA-N")
 
-# Initialise a database in the default location
+# Initialise a cache in the default location
 classes <- classify_me(keys)
 
-# Future calls are faster as they access the local database instead of the
-# online classyfire database
+# Future calls are faster as they access the local cache instead of the
+# online classyfire cache
 classes <- classify_me(keys)
 
-# You can setup your database wherever you like
+# You can setup your cache wherever you like
 classes_alt <- classify_me(
   keys,
- database = file.path(Sys.getenv("HOME"), "Metabolomics", "classyfire_DB/ClassyFireCache.db")
+ cache = file.path(Sys.getenv("HOME"), "Metabolomics", "classyfire_DB/ClassyFireCache.db")
 )
 }

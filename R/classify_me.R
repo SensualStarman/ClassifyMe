@@ -7,8 +7,8 @@
 #' `classyfireR` package.
 #'
 #' @param inchikeys chr vector containing only InChI keys and `NA`
-#' @param database the file path of an SQLite database. Default `NULL` places the
-#' database in the user's home folder.
+#' @param cache the file path of an SQLite cache. Default `NULL` places the
+#' cache in the user's home folder.
 #'
 #' @returns a dataframe with columns containing the InChI key and the first four
 #' classification levels from the ClassyFire database
@@ -31,24 +31,24 @@
 #'   "KQTROLJZWNACJT-VKAVYKQESA-N",
 #'   "GMYNCKRSFMEXPG-UHFFFAOYSA-N")
 #'
-#' # Initialise a database in the default location
+#' # Initialise a cache in the default location
 #' classes <- classify_me(keys)
 #'
-#' # Future calls are faster as they access the local database instead of the
-#' # online classyfire database
+#' # Future calls are faster as they access the local cache instead of the
+#' # online classyfire cache
 #' classes <- classify_me(keys)
 #'
-#' # You can setup your database wherever you like
+#' # You can setup your cache wherever you like
 #' classes_alt <- classify_me(
 #'   keys,
-#'  database = file.path(Sys.getenv("HOME"), "Metabolomics", "classyfire_DB/ClassyFireCache.db")
+#'  cache = file.path(Sys.getenv("HOME"), "Metabolomics", "classyfire_DB/ClassyFireCache.db")
 #' )
 
 classify_me <- function(
     inchikeys,
-    database = NULL) {
-  # Work out where the cache database should live
-  if(is.null(database)) {
+    cache = NULL) {
+  # Work out where the cache cache should live
+  if(is.null(cache)) {
     # No path given, so use the default location in the user's home folder
     user_home <- if (.Platform$OS.type == "windows") {
       Sys.getenv("USERPROFILE")
@@ -58,17 +58,17 @@ classify_me <- function(
 
     DB_location <- file.path(user_home, "Documents/classyfire_DB/ClassyFireCache.db")
 
-  } else if(!file.exists(database)) {
+  } else if(!file.exists(cache)) {
     # A path was given but nothing exists there yet, so warn the user and
-    # create a fresh database file at that location
+    # create a fresh cache file at that location
     message(paste0("'ClassyFireCache.db' not found! Automatically creating a copy.\n\n",
                    "If you have a cache saved elsewhere, press stop and put it in \n'",
-                   database,
-                   "' now, or use the `database` argument.\n",
+                   cache,
+                   "' now, or use the `cache` argument.\n",
                    "It will save you a lot of time, I promise."))
-    DB_location <- database
+    DB_location <- cache
 
-    # Make sure the parent folder exists before creating the database file
+    # Make sure the parent folder exists before creating the cache file
     dir.create(dirname(DB_location), recursive = TRUE, showWarnings = FALSE)
 
     # Touch the file into existence, then close the connection immediately
@@ -78,7 +78,7 @@ classify_me <- function(
 
   } else {
     # A path was given and the file already exists, so just use it
-    DB_location <- database
+    DB_location <- cache
   }
 
   # Open the cache and look up each InChIKey's classification
