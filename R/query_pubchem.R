@@ -49,7 +49,7 @@
 #' )
 query_pubchem <- function(
     data,
-    cache,
+    cache = NULL,
     name = "Name",
     cas = "CAS",
     lipidmaps = "LMP",
@@ -57,7 +57,16 @@ query_pubchem <- function(
   # Calculate the number of rows
   data_rows <- nrow(data)
 
-  # Initialise a blank dataframe to sue for null results
+  # Initialise the cache if one is not specified
+  if(is.null(cache)) {
+    cache <- init_PubChem_cache()
+    message("No cache specified. Initialising a cache in the default location.")
+  }
+
+  # Initialise a cache if the cache object is the wrong type
+
+
+  # Initialise a blank dataframe for null results
   null_result <- data.frame(
     CID = integer(),
     InChIKey = character(),
