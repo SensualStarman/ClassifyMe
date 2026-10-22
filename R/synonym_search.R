@@ -33,10 +33,8 @@ synonym_search <- function(
     stop("No internet connection available. Stopping PubChem query")
   }
 
-  # Make sure there is a correctly connected cache
-  if(is.null(cache) || (! "storr" %in% class(cache))) {
-    stop(paste0('\n No cache found. Set up a cache using `init_PubChem_cache()'))
-  }
+  # Check cache is set up properly, fix it if it isn't
+  cache <- .cache_checks(cache)
 
   # This tryCatch checks the local cache first, then if it errors (i.e. no match)
   # it queries PubChem
@@ -44,7 +42,13 @@ synonym_search <- function(
     # Check the local cache for the result
     # The gsub call replaces any characters forbidden from Windows filenames
     # with an underscore
-    cache$get(gsub('[<>:"/\\\\|?*]', "_", name))
+    out <- cache$get(gsub('[<>:"/\\\\|?*]', "_", name))
+
+    # Display a success message
+    cli_alert_success(col_green(name))
+
+    # Return `out`
+    out
 
   }, error = function(e) {
     # tryCatch runs HTTP request and saves "NA" if it fails
@@ -66,12 +70,15 @@ synonym_search <- function(
       # with an underscore
       cache$set(gsub('[<>:"/\\\\|?*]', "_", name), query_df)
 
+      # Display a success message
+      cli_alert_success(col_green(name))
+
       # Return the one-line dataframe with results
       query_df
 
     }, error = function(e) {
       # If there was an error, print the error message ...
-      message("PubChem lookup failed: ", e$message)
+      cli_alert_danger(col_red(c(name, ": ", e$message)))
 
       # ... save an identical dataframe albeit with NA instead of results ...
       query_df <- data.frame(

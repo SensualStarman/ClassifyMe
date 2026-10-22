@@ -17,7 +17,7 @@
 .query_and_bind <- function(queries, query_fun, id_colname, label) {
   # Query the database for each element of `queries` using `query_fun`
   results <- lapply(queries, function(query) {
-    print(paste0("Querying local cache and PubChem for ", label, "# ", query, " . . ."))
+    # print(paste0("Querying local cache and PubChem for ", label, "# ", query, " . . ."))
     result <- query_fun(query)
     result[[4]] <- query
     # Put the results into a one-row dataframe for binding later

@@ -14,6 +14,7 @@
 #'
 #' @returns a one-row dataframe with the PubChem compound ID, InChIKey, and PubChem title
 #'
+#' @import cli
 #' @import curl
 #' @import storr
 #'
@@ -43,7 +44,7 @@
 identifier_standardiser <- function(
     identifier,
     type = c("CAS", "LMP", "HMDB"),
-    cache) {
+    cache = NULL) {
   # Check that there is an internet connection. Stop if there isn't
   if(!curl::has_internet()) {
     stop("No internet connection available. Stopping PubChem query")
@@ -52,16 +53,20 @@ identifier_standardiser <- function(
   # Check that `type` is one of the values I'm looking for
   type <- match.arg(type)
 
-  # Make sure there is a correctly connected cache
-  if(is.null(cache) || (! "storr" %in% class(cache))) {
-    stop(paste0('\n No cache found. Set up a cache using `init_PubChem_cache()'))
-  }
+  # Check cache is set up properly, fix it if it isn't
+  cache <- .cache_checks(cache)
 
   # This tryCatch checks the local cache first, then if it errors (i.e. no match)
   # it queries PubChem
   result <- tryCatch({
     # Check the local cache for the result
-    cache$get(identifier)
+    out <- cache$get(identifier)
+
+    # Display a success message
+    cli_alert_success(col_green(identifier))
+
+    # Return `out`
+    out
 
   }, error = function(e) {
     # Rephrase `type` into what PubChem wants to see, putting the result in a new
@@ -103,6 +108,9 @@ identifier_standardiser <- function(
       # Save the result to the local cache
       cache$set(identifier, query_df)
 
+      # Display a success message
+      cli_alert_success(col_green(identifier))
+
       # Return the one-line dataframe with results
       query_df
 
@@ -111,7 +119,7 @@ identifier_standardiser <- function(
     }, error = function(e) {
 
       # If there was an error, print the error message ...
-      message("PubChem lookup failed: ", e$message)
+      cli_alert_danger(col_red(c(identifier, ": ", e$message)))
 
       # ... save an identical dataframe albeit with NA instead of results ...
       query_df <- data.frame(

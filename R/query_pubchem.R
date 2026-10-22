@@ -57,14 +57,8 @@ query_pubchem <- function(
   # Calculate the number of rows
   data_rows <- nrow(data)
 
-  # Initialise the cache if one is not specified
-  if(is.null(cache)) {
-    cache <- init_PubChem_cache()
-    message("No cache specified. Initialising a cache in the default location.")
-  }
-
-  # Initialise a cache if the cache object is the wrong type
-
+  # Check cache is set up properly, fix it if it isn't
+  cache <- .cache_checks(cache)
 
   # Initialise a blank dataframe for null results
   null_result <- data.frame(
@@ -86,13 +80,13 @@ query_pubchem <- function(
     CAS_results <- null_result
     names(CAS_results)[4] <- cas
 
-    message("No column specified for `cas`")
+    cli_alert_warning("No column specified for `cas`")
 
   } else {
     CAS_logic <- .get_logic(data, cas)
 
     # Query PubChem with CAS IDs
-    print("Querying local cache and PubChem with CAS IDs . . .")
+    cli_alert_info("Querying local cache and PubChem with CAS IDs . . .")
     CAS_results <- .query_and_bind(
       queries = data[[cas]][CAS_logic],
       query_fun = function(q) identifier_standardiser(
@@ -114,14 +108,14 @@ query_pubchem <- function(
     LMP_results <- null_result
     names(LMP_results)[4] <- lipidmaps
 
-    message("No column specified for `lipidmaps`")
+    cli_alert_warning("No column specified for `lipidmaps`")
 
   } else {
     LMP_logic <- .get_logic(data, lipidmaps)
     LMP_logic[CAS_logic] <- F
 
     # Query PubChem with LIPIDMAPS IDs
-    print("Querying local cache and PubChem with LIPIDMAPS IDs . . .")
+    cli_alert_info("Querying local cache and PubChem with LIPIDMAPS IDs . . .")
     LMP_results <- .query_and_bind(
       queries = data[[lipidmaps]][LMP_logic],
       query_fun = function(q) identifier_standardiser(
@@ -132,12 +126,12 @@ query_pubchem <- function(
       label = lipidmaps
     )
     # Retry failed LIPIDMAPS lookups via synonym search
-    print("Using synonym search for LIPIDMAPS queries that failed . . .")
+    cli_alert_info("Using synonym search for LIPIDMAPS queries that failed . . .")
     failed_LMP_indices <- which(is.na(LMP_results$CID))
 
     if (length(failed_LMP_indices) > 0) {
       retried <- lapply(LMP_results[[lipidmaps]][failed_LMP_indices], function(query) {
-        print(paste0("Querying local cache and PubChem for LMP# ", query, " . . ."))
+        # print(paste0("Querying local cache and PubChem for LMP# ", query, " . . ."))
         result <- synonym_search(
           query,
           cache = cache)
@@ -166,14 +160,14 @@ query_pubchem <- function(
     HMDB_results <- null_result
     names(HMDB_results)[4] <- hmdb
 
-    message("No column specified for `hmdb`")
+    cli_alert_warning("No column specified for `hmdb`")
 
   } else {
     HMDB_logic <- .get_logic(data, hmdb)
     HMDB_logic[CAS_logic | LMP_logic] <- F
 
     # Query PubChem with HMDB IDs
-    print("Querying local cache and PubChem with HMDB IDs . . .")
+    cli_alert_info("Querying local cache and PubChem with HMDB IDs . . .")
     HMDB_results <- .query_and_bind(
       queries = data[[hmdb]][HMDB_logic],
       query_fun  = function(q) {
@@ -198,12 +192,12 @@ query_pubchem <- function(
     Name_results <- null_result
     names(Name_results)[4] <- name
 
-    message("No column specified for `name`")
+    cli_alert_warning("No column specified for `name`")
   } else {
     NO_ID_logic <- !( CAS_logic | LMP_logic | HMDB_logic )
 
     # Query PubChem with leftover names
-    print("Querying local cache and PubChem with names . . .")
+    cli_alert_info("Querying local cache and PubChem with names . . .")
     Name_results <- .query_and_bind(
       queries = data[[name]][NO_ID_logic],
       query_fun = function(q) synonym_search(
