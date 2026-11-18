@@ -46,7 +46,7 @@ synonym_search <- function(
     out <- cache$get(gsub('[<>:"/\\\\|?*]', "_", name))
 
     # Display a success message
-    cli::cli_alert_success(col_green(name))
+    cli::cli_alert_success(col_green("{name}"))
 
     # Return `out`
     out
@@ -72,14 +72,15 @@ synonym_search <- function(
       cache$set(gsub('[<>:"/\\\\|?*]', "_", name), query_df)
 
       # Display a success message
-      cli::cli_alert_success(col_green(name))
+      cli::cli_alert_success(col_green("{name}"))
 
       # Return the one-line dataframe with results
       query_df
 
     }, error = function(e) {
       # If there was an error, print the error message ...
-      cli::cli_alert_danger(col_red(c(name, ": ", e$message)))
+      msg <- paste0(name, ": ", e$message)
+      cli::cli_alert_danger(cli::col_red("{msg}"))
 
       # ... save an identical dataframe albeit with NA instead of results ...
       query_df <- data.frame(

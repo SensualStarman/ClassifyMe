@@ -63,7 +63,7 @@ identifier_standardiser <- function(
     out <- cache$get(identifier)
 
     # Display a success message
-    cli_alert_success(col_green(identifier))
+    cli::cli_alert_success(col_green("{identifier}"))
 
     # Return `out`
     out
@@ -109,7 +109,7 @@ identifier_standardiser <- function(
       cache$set(identifier, query_df)
 
       # Display a success message
-      cli_alert_success(col_green(identifier))
+      cli::cli_alert_success(col_green("{identifier}"))
 
       # Return the one-line dataframe with results
       query_df
@@ -119,7 +119,8 @@ identifier_standardiser <- function(
     }, error = function(e) {
 
       # If there was an error, print the error message ...
-      cli_alert_danger(col_red(c(identifier, ": ", e$message)))
+      msg <- paste0(identifier, ": ", e$message)
+      cli::cli_alert_danger(cli::col_red("{msg}"))
 
       # ... save an identical dataframe albeit with NA instead of results ...
       query_df <- data.frame(
