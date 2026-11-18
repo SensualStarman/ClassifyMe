@@ -5,7 +5,6 @@
 #' @returns a correctly set up PubChem cache
 #' @export
 #'
-#' @examples
 .cache_checks <- function(cache) {
 
   if(is.null(cache)) {

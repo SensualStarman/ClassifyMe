@@ -6,7 +6,7 @@
 \usage{
 query_pubchem(
   data,
-  cache,
+  cache = NULL,
   name = "Name",
   cas = "CAS",
   lipidmaps = "LMP",

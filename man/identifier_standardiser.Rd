@@ -4,7 +4,11 @@
 \alias{identifier_standardiser}
 \title{Standardise CAS, LIPID-MAPS and HMDB IDs}
 \usage{
-identifier_standardiser(identifier, type = c("CAS", "LMP", "HMDB"), cache)
+identifier_standardiser(
+  identifier,
+  type = c("CAS", "LMP", "HMDB"),
+  cache = NULL
+)
 }
 \arguments{
 \item{identifier}{a database identifier to search for (e.g. "58-18-4", "LMFA01100004" or "HMDB0002100")}

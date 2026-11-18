@@ -15,7 +15,7 @@
 #'
 #' @import DBI
 #' @import janitor
-#' @import magrittr
+#' @importFrom magrittr %>% set_rownames
 #' @import purrr
 #' @import RSQLite
 #' @import classyfireR
@@ -90,7 +90,7 @@ classify_me <- function(
   # Query the cache for every InChIKey; returns one S4 object per key
   clunky_classes <- clean %>%
     purrr::map(classyfireR::get_classification, conn = ClassyFireCache) %>%
-    set_names(clean)
+    purrr::set_names(clean)
 
   # Done querying, so close the connection
   DBI::dbDisconnect(conn = ClassyFireCache)
@@ -112,7 +112,7 @@ classify_me <- function(
     names(classes),
     .reshape_classification,
     clunky_classes = clunky_classes) %>%
-    set_names(names(classes))
+    purrr::set_names(names(classes))
 
   # Stack every compound's row into one tidy dataframe and return it
   result <- bind_rows(classes)
