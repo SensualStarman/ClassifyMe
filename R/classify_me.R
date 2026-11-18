@@ -104,31 +104,15 @@ classify_me <- function(
 
   # Pull the classification dataframe out of each S4 result object
   for (index in not_empty) {
-    classes[[index]] <- classification(clunky_classes[[index]])
+    classes[[index]] <- classyfireR::classification(clunky_classes[[index]])
   }
 
-  # Classifications can have different numbers of levels, and that changes
-  # how they need to be subsetted below, so split them into two groups
-  nlevels <- sapply(classes, function(x) if (is.null(x)) 0 else nrow(x))
-  longs <- nlevels >= 4
-  shorts <- nlevels < 4
-
-  # Reshape each classification from long (one row per level) to wide
-  # (one row per compound), keeping only the top 4 levels
-  classes[longs] <- lapply(
-    names(classes)[longs],
+  # Reshape each classification from long to wide, keeping every level
+  classes <- lapply(
+    names(classes),
     .reshape_classification,
-    clunky_classes = clunky_classes,
-    n = 4) %>%
-    set_names(names(classes)[longs])
-
-  # Same reshaping, but keep every level since there are fewer than 4
-  classes[shorts] <- lapply(
-    names(classes)[shorts],
-    .reshape_classification,
-    clunky_classes = clunky_classes
-  ) %>%
-    set_names(names(classes)[shorts])
+    clunky_classes = clunky_classes) %>%
+    set_names(names(classes))
 
   # Stack every compound's row into one tidy dataframe and return it
   result <- bind_rows(classes)
