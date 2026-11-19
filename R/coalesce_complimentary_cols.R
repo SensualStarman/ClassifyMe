@@ -25,11 +25,17 @@
 #' # Appends a new column containing coalesced data
 #' .coalesce_complimentary_cols(df_1, cols = names(df_1))
 #'
-#' # If there is mroe than one entry in any row, return NA for that row
+#' # If there is more than one entry in any row, return NA for that row
 #' df_2 <- df_1
 #' df_2[1,3] <- "X"
 #'
 #' .coalesce_complimentary_cols(df_2, cols = names(df_2))
+#'
+#' # If there is more than one entry in a row and they are all the same, return the entry for that row
+#' df_3 <- df_2
+#' df_3[1,1] <- "X"
+#'
+#' .coalesce_complimentary_cols(df_3, cols = names(df_3))
 .coalesce_complimentary_cols <-
   function(
     data,
@@ -48,8 +54,13 @@
     }
 
     # Calculate the number of values that aren't NA in each row. This should == 1
-    # so that rows can be merged. Where they are > 1, output is NA.
+    # so that rows can be merged. Where they are > 1, output is NA, unless all
+    # the non-NA entries in that row are identical.
     n_not_NA_logic <- rowSums(!is.na(subset)) > 1
+
+    # Of the rows with more than one entry, check whether the entries all agree
+    n_distinct <- apply(subset, 1, function(x) length(unique(x[!is.na(x)])))
+    n_not_NA_logic <- n_not_NA_logic & n_distinct > 1
 
     rownames_not_NA <- rownames(data)[n_not_NA_logic]
 
@@ -70,4 +81,4 @@
     result[[output_col_name]] <- merged_col
 
     result
-}
+  }

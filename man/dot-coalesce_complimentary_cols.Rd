@@ -33,9 +33,15 @@ df_1 <- data.frame(
 # Appends a new column containing coalesced data
 .coalesce_complimentary_cols(df_1, cols = names(df_1))
 
-# If there is mroe than one entry in any row, return NA for that row
+# If there is more than one entry in any row, return NA for that row
 df_2 <- df_1
 df_2[1,3] <- "X"
 
 .coalesce_complimentary_cols(df_2, cols = names(df_2))
+
+# If there is more than one entry in a row and they are all the same, return the entry for that row
+df_3 <- df_2
+df_3[1,1] <- "X"
+
+.coalesce_complimentary_cols(df_3, cols = names(df_3))
 }
